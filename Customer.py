@@ -4,5 +4,10 @@ Customer.py
 
 
 class Customer:
-   def __init__(self):
-       pass
+    time_in = int()
+    time_out = int()
+    time_waited = int()
+    lane = int()
+
+    def __init__(self, time_in):
+        self.time_in = time_in

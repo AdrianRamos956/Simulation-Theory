@@ -3,10 +3,13 @@ Simulation.py
 """
 import sys
 
+import CheckoutLane
 import Statistics
 
 
 class Simulation:
+
+    checkout_lanes = list()
 
     def __init__(self):
         self.logfile = open('logfile.txt', 'a+')
@@ -22,4 +25,16 @@ class Simulation:
         begin the simulation
         :return: none
         """
+        #TODO SETUP
+        self.create_lanes(self)
+
+
         pass
+
+    def create_lanes(self):
+        for i in range(self.num_checkout_lanes):
+            list.append(CheckoutLane.CheckoutLane(i))
+
+
+
+

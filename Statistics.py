@@ -24,3 +24,10 @@ class Statistics:
 
     def set_p_no_customers(self):
         pass
+
+    def write_stats(self):
+        """
+        Write the statics to a file
+        :return:
+        """
+

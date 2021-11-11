@@ -5,9 +5,9 @@ import sys
 
 
 class Simulation:
-    logfile = open('logfile.txt', 'a+')
 
     def __init__(self):
+        logfile = open('logfile.txt', 'a+')
         rand_seed = sys.argv[1]
         sim_duration_minutes = sys.argv[2]
         num_checkout_lanes = sys.argv[3]

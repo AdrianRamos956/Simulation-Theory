@@ -16,7 +16,7 @@ class CheckoutLane:
         self.customer_queue[lane].pop(0)
         self.num_customers -= 1
 
-    def customer_enter(self, customer)
+    def customer_enter(self, customer):
         self.num_customers += 1
         self.total_customers += 1
         self.customer_queue[customer.lane].append(customer)

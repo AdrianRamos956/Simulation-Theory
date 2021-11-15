@@ -28,7 +28,8 @@ class Simulation:
         """
         #TODO SETUP
         self.create_lanes(self)
-        N = len(self.rand_seed)
+        seed = str(self.rand_seed)
+        N = len(seed)
         R = self.generateR(self, N)
         self.uniTransform(R, self.customer_arrival_rate, N)
         pass

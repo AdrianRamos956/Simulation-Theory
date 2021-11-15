@@ -5,6 +5,7 @@ import sys
 import random
 import CheckoutLane
 import Statistics
+import numpy as np
 
 
 class Simulation:
@@ -29,15 +30,15 @@ class Simulation:
         self.create_lanes(self)
         N = len(self.rand_seed)
         R = self.generateR(self, N)
-        self.uniTransform(R, self.customer_arrival_rate)
+        self.uniTransform(R, self.customer_arrival_rate, N)
         pass
 
     def create_lanes(self):
         for i in range(self.num_checkout_lanes):
             list.append(CheckoutLane.CheckoutLane(i))
     
-    def uniTransform(R, lam):
-        customerDist = -(1 - R)/ lam
+    def uniTransform(R, lam, N):
+        customerDist = round((-(1/lam)* np.log(1-R)), N)
         return customerDist
 
     def generateR(self, N):

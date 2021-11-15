@@ -7,7 +7,7 @@ import Simulation
 import Customer
 import CheckoutLane
 import Statistics
-
+import numpy as np
 """
 seed
 duration
@@ -22,6 +22,7 @@ ex. sim1 789 1000 5 4 3
 def main():
     read_args()
     sim = Simulation.Simulation()
+    
 
 
 def read_args():

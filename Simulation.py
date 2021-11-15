@@ -2,7 +2,7 @@
 Simulation.py
 """
 import sys
-
+import random
 import CheckoutLane
 import Statistics
 
@@ -27,14 +27,21 @@ class Simulation:
         """
         #TODO SETUP
         self.create_lanes(self)
-
-
+        N = len(self.rand_seed)
+        R = self.generateR(self, N)
+        self.uniTransform(R, self.customer_arrival_rate)
         pass
 
     def create_lanes(self):
         for i in range(self.num_checkout_lanes):
             list.append(CheckoutLane.CheckoutLane(i))
+    
+    def uniTransform(R, lam):
+        customerDist = -(1 - R)/ lam
+        return customerDist
 
+    def generateR(self, N):
+        R = round(random.uniform(0,1), N)
 
 
 

@@ -29,6 +29,9 @@ class CheckoutLane:
                 ct += len(i) - 1
         return ct
 
+    def get_first_customer(self):
+        return self.customer_queue[0]
+
 
     
     

@@ -3,7 +3,6 @@ Simulation.py
 """
 import sys
 import random
-from typing_extensions import Self
 import CheckoutLane
 import Customer
 import SimEvent
@@ -13,7 +12,7 @@ import numpy as np
 
 class Simulation:
 
-    checkout_lanes = list()
+    
 
     def __init__(self):
         self.logfile = open('logfile.txt', 'a+')
@@ -23,6 +22,7 @@ class Simulation:
         self.num_checkout_lanes = sys.argv[3]
         self.customer_arrival_rate = sys.argv[4]
         self.customer_service_rate = sys.argv[5]
+        self.checkout_lanes = list()
         #self.current_customer = Customer.Customer()
         #self.current_lane = CheckoutLane.CheckoutLane()
         
@@ -34,6 +34,7 @@ class Simulation:
         """
         #TODO SETUP
         #Time used for checking when customers are added to system and when they need to be removed 
+        stop = self.sim_duration_minutes
         sim_time = 0.0
         self.create_lanes(self)
         seed = str(self.rand_seed)
@@ -45,34 +46,36 @@ class Simulation:
         #Service time of customer
         time_s = self.uniTransform(R, self.customer_service_rate, N)
         #Current customer to add to queue
-        current_customer = Customer.Customer(self, 0.0, time_s, customer_number)
+        current_customer = Customer.Customer(0.0, time_s, customer_number)
         #Current lane for adding customers to
-        current_lane = CheckoutLane.CheckoutLane(self, 1)
+        current_lane = self.checkout_lanes[0]
         #Add initial customer to Queue at time 0.0
         SimEvent.SimEvent(self, 0, current_lane, current_customer)
         Customer.Customer.log_in(self)
         #Run simulation for specified duration 
         while self.sim_duration_minutes != 0:
-            #Add customers to lane in one-time step per the customer arrival rate
-            i = 0
-            for i in range(self.customer_arrival_rate - 1):  
-                #Create a customer and add them to a lane  
-                customer_number += 1
-                R = self.generateR(N)
-                #Perform uniform transformation for customer and add it to current sim_time to accurately detail when it's added to the system
-                sim_time += self.uniTransform(R, self.customer_arrival_rate, N)
-                R = self.generateR(N)
-                time_s = self.uniTransform(R, self.customer_service_rate, N)
-                current_customer = Customer.Customer(self, sim_time, time_s, customer_number)
-                current_lane = Customer.Customer.set_lane(self)
-                SimEvent.SimEvent(self, 0, current_lane, current_customer)
-                Customer.Customer.log_in(self)
-                #Check if a customer is ready to be checked out
-                if  current_customer >= sim_time:
-                    SimEvent.SimEvent(self, 1, current_lane, current_customer)
+            if sim_time >= stop:
+                break
+            #Add customers to lane in one-time step per the customer arrival rate 
+            #Create a customer and add them to a lane  
+            customer_number += 1
+            R = self.generateR(N)
+            #Perform uniform transformation for customer and add it to current sim_time to accurately detail when it's added to the system
+            sim_time += self.uniTransform(R, self.customer_arrival_rate, N)
+            R = self.generateR(N)
+            time_s = self.uniTransform(R, self.customer_service_rate, N)
+            current_customer = Customer.Customer( sim_time, time_s, customer_number)
+            current_lane = Customer.Customer.set_lane()
+            SimEvent.SimEvent(0, self.checkout_lanes[current_lane], current_customer)
+            Customer.Customer.log_in(self)
+            #Check if a customer is ready to be checked out
+            for i in range(self.checkout_lanes):
+                if  self.checkout_lanes[i].customer_queue[0].time_service <= sim_time:
+                    SimEvent.SimEvent(1, current_lane, current_customer)
                     Customer.Customer.log_out(self, sim_time)
             self.sim_duration_minutes -= 1
         pass
+
     #Creates lanes based off of the amount of lanes given on the command line
     def create_lanes(self):
         for i in range(self.num_checkout_lanes):

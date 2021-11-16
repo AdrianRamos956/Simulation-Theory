@@ -31,26 +31,25 @@ class Simulation:
         :return: none
         """
         #TODO SETUP
+        sim_time = 0.0
         self.create_lanes(self)
         seed = str(self.rand_seed)
         customer_number = 1
         N = len(seed)
         R = self.generateR(self, N)
-        self.current_customer = Customer.Customer.__init__(self, 0.0, customer_number)
+        time_service = self.uniTransform(self.customer_service_rate, N)
+        self.current_customer = Customer.Customer.__init__(self, 0.0, time_service,customer_number)
         self.current_lane = CheckoutLane.CheckoutLane.__init__(self, 1)
         SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
         while self.sim_duration_minutes != 0:
             customer_number += 1
-            customerEntry = self.uniTransform(R, self.customer_arrival_rate, N)
-            self.current_customer = Customer.Customer.__init__(self, customerEntry, customer_number)
+            customer_entry = self.uniTransform(R, self.customer_arrival_rate, N)
+            sim_time += customer_entry
+            self.current_customer = Customer.Customer.__init__(self, sim_time, customer_number)
             self.current_lane = Customer.Customer.set_lane(self)
             SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
-
-
+            
             self.sim_duration_minutes -= 1
-            pass
-        
-
         pass
 
     def create_lanes(self):

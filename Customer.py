@@ -6,7 +6,7 @@ import math
 
 class Customer:
     
-    def __init__(self, time_in, number):
+    def __init__(self, time_in, time_service, number):
         self.time_in = time_in
         # Int Variable
         self.time_out = None
@@ -14,6 +14,8 @@ class Customer:
         self.time_waited = None
         # Int Variable
         self.lane = None
+        # Float Variable
+        self.time_service = time_service
         #Int Variable
         #for log file
         self.number = number

@@ -71,7 +71,7 @@ class Simulation:
                     Customer.Customer.log_out(self, sim_time)
             self.sim_duration_minutes -= 1
         pass
-
+    #Creates lanes based off of the amount of lanes given on the command line
     def create_lanes(self):
         for i in range(self.num_checkout_lanes):
             list.append(CheckoutLane.CheckoutLane(i))

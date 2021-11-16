@@ -2,6 +2,7 @@
 CheckoutLane.py
 """
 import queue
+import Customer
 
 
 class CheckoutLane:

@@ -1,12 +1,11 @@
 """
 Checkout Simulation
-
 """
 import sys
 import Simulation
-import Customer
-import CheckoutLane
-import Statistics
+#import Customer
+#import CheckoutLane
+#import Statistics
 import numpy as np
 """
 seed
@@ -14,7 +13,6 @@ duration
 lanes
 customer arrival time
 customer service rate
-
 ex. sim1 789 1000 5 4 3
 """
 
@@ -26,8 +24,9 @@ def main():
 
 
 def read_args():
-    if len(sys.argv) < 6:
-        print("Usage: sim1.py [seed] [duration] [lanes] [customer arrival time] [customer service rate]\n"
+    if len(sys.argv) != 6:
+        print("Invalid Ammount of Arguments\n"
+              "Usage: sim1.py [seed] [duration] [lanes] [customer arrival time] [customer service rate]\n"
               "Ex. sim1 789 1000 5 4 3")
         sys.exit(-1)
 

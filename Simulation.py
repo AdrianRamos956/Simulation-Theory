@@ -23,8 +23,8 @@ class Simulation:
         self.num_checkout_lanes = sys.argv[3]
         self.customer_arrival_rate = sys.argv[4]
         self.customer_service_rate = sys.argv[5]
-        self.current_customer = Customer.Customer()
-        self.current_lane = CheckoutLane.CheckoutLane()
+        #self.current_customer = Customer.Customer()
+        #self.current_lane = CheckoutLane.CheckoutLane()
         
 
     def start(self):
@@ -43,31 +43,33 @@ class Simulation:
         #Random number used for uniform transformation
         R = self.generateR(N)
         #Service time of customer
-        time_service = self.uniTransform(self.customer_service_rate, N)
+        time_s = self.uniTransform(R, self.customer_service_rate, N)
         #Current customer to add to queue
-        self.current_customer = Customer.Customer.__init__(self, 0.0, time_service,customer_number)
+        current_customer = Customer.Customer(self, 0.0, time_s, customer_number)
         #Current lane for adding customers to
-        self.current_lane = CheckoutLane.CheckoutLane.__init__(self, 1)
+        current_lane = CheckoutLane.CheckoutLane(self, 1)
         #Add initial customer to Queue at time 0.0
-        SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
+        SimEvent.SimEvent(self, 0, current_lane, current_customer)
         Customer.Customer.log_in(self)
         #Run simulation for specified duration 
         while self.sim_duration_minutes != 0:
             #Add customers to lane in one-time step per the customer arrival rate
-            for i in range(self.customer_arrival_rate):  
+            i = 0
+            for i in range(self.customer_arrival_rate - 1):  
                 #Create a customer and add them to a lane  
                 customer_number += 1
                 R = self.generateR(N)
                 #Perform uniform transformation for customer and add it to current sim_time to accurately detail when it's added to the system
                 sim_time += self.uniTransform(R, self.customer_arrival_rate, N)
-                time_service = self.uniTransform(self.customer_service_rate, N)
-                self.current_customer = Customer.Customer.__init__(self, sim_time, time_service,customer_number)
-                self.current_lane = Customer.Customer.set_lane(self)
-                SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
+                R = self.generateR(N)
+                time_s = self.uniTransform(R, self.customer_service_rate, N)
+                current_customer = Customer.Customer(self, sim_time, time_s, customer_number)
+                current_lane = Customer.Customer.set_lane(self)
+                SimEvent.SimEvent(self, 0, current_lane, current_customer)
                 Customer.Customer.log_in(self)
                 #Check if a customer is ready to be checked out
-                if self.current_customer < sim_time:
-                    SimEvent.SimEvent.__init__(self, 1, self.current_lane, self.current_customer)
+                if  current_customer >= sim_time:
+                    SimEvent.SimEvent(self, 1, current_lane, current_customer)
                     Customer.Customer.log_out(self, sim_time)
             self.sim_duration_minutes -= 1
         pass

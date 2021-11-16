@@ -3,7 +3,7 @@ SimEvent.py
 """
 import sys
 import CheckoutLane
-import Customer
+
 
 CUSTOMER_READY = 0
 CUSTOMER_COMPLETE = 1

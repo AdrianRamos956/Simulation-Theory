@@ -4,6 +4,8 @@ Simulation.py
 import sys
 import random
 import CheckoutLane
+import Customer
+import SimEvent
 import Statistics
 import numpy as np
 
@@ -20,6 +22,8 @@ class Simulation:
         self.num_checkout_lanes = sys.argv[3]
         self.customer_arrival_rate = sys.argv[4]
         self.customer_service_rate = sys.argv[5]
+        self.current_customer = Customer.Customer()
+        self.current_lane = CheckoutLane.CheckoutLane()
 
     def start(self):
         """
@@ -29,9 +33,24 @@ class Simulation:
         #TODO SETUP
         self.create_lanes(self)
         seed = str(self.rand_seed)
+        customer_number = 1
         N = len(seed)
         R = self.generateR(self, N)
-        self.uniTransform(R, self.customer_arrival_rate, N)
+        self.current_customer = Customer.Customer.__init__(self, 0.0, customer_number)
+        self.current_lane = CheckoutLane.CheckoutLane.__init__(self, 1)
+        SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
+        while self.sim_duration_minutes != 0:
+            customer_number += 1
+            customerEntry = self.uniTransform(R, self.customer_arrival_rate, N)
+            self.current_customer = Customer.Customer.__init__(self, customerEntry, customer_number)
+            self.current_lane = Customer.Customer.set_lane(self)
+            SimEvent.SimEvent.__init__(self, 0, self.current_lane, self.current_customer)
+
+
+            self.sim_duration_minutes -= 1
+            pass
+        
+
         pass
 
     def create_lanes(self):
@@ -39,11 +58,13 @@ class Simulation:
             list.append(CheckoutLane.CheckoutLane(i))
     
     def uniTransform(R, lam, N):
-        customerDist = round((-(1/lam)* np.log(1-R)), N)
+        customerDist = round((-np.log(1-R) * lam), N)
+        #customerDist = round((-(1/lam)* np.log(1-R)), N)
         return customerDist
 
     def generateR(self, N):
         R = round(random.uniform(0,1), N)
+        return R
 
 
 

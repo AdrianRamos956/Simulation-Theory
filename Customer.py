@@ -22,12 +22,12 @@ class Customer:
         self.number = number
 
     # Sets customers current lane based off of which lane as the shortest queue
-    def set_lane_nr(self, lane_queue):
-        number_of_lanes = len(lane_queue)
+    def set_lane_nr(self, lane_list):
+        number_of_lanes = len(lane_list)
         shortest_lane_length = math.inf
         shortest_lane_nr = 0
         for i in range(number_of_lanes):
-            if len(lane_queue[i]) < shortest_lane_length:
+            if len(lane_list[i]) < shortest_lane_length:
                 shortest_lane_nr = i
         self.lane_nr = shortest_lane_nr
         return shortest_lane_nr

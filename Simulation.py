@@ -62,7 +62,7 @@ class Simulation:
             rand = self.generate_rand(self.rand_seed)
             time_service = inv_transform(rand, self.customer_service_rate)
             current_customer = Customer.Customer(sim_time, time_service, customer_number)
-            current_lane_nr = Customer.Customer.set_lane_nr()
+            current_lane_nr = current_customer.set_lane_nr(self.checkout_lanes)
             SimEvent.SimEvent(0, self.checkout_lanes[current_lane_nr], current_customer)
             Customer.Customer.log_in(self)
             # Check if a customer is ready to be checked out

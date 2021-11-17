@@ -35,14 +35,14 @@ class Customer:
     # Writes out to the log file whenever a customer is added
     def log_in(self):
         file1 = open("log.txt", "a")
-        file1.write("Time: %2f Customer %d enters check-out lane %d", (self.time_in, self.number, self.lane_nr))
+        file1.write("Time: %2f Customer %d enters check-out lane %d" % (self.time_in, self.number, self.lane_nr))
         file1.close()
 
     # Writes out to the log file whenever a customer has left a queue
     def log_out(self, time):
         self.time_out = time
         file1 = open("log.txt", "a")
-        file1.write("Time: %2f Customer %d exits check-out lane %d", (self.time_out, self.number, self.lane_nr))
+        file1.write("Time: %2f Customer %d exits check-out lane %d" % (self.time_out, self.number, self.lane_nr))
         file1.close()
 
     # Calculates time waited for each customer

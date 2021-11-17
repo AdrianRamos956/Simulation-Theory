@@ -14,8 +14,8 @@ class CheckoutLane:
         self.customer_queue = [] * self.number
 
     # Called when customer 1 Event is triggered
-    def customer_exit(self, lane):
-        self.customer_queue[lane].pop(0)
+    def customer_exit(self, lane_nr):
+        self.customer_queue[lane_nr].pop(0)
         self.num_customers -= 1
 
     # Called when customer 0 Event is triggered

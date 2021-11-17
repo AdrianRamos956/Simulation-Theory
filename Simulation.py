@@ -7,6 +7,7 @@ import CheckoutLane
 import Customer
 import SimEvent
 import Statistics
+import queue
 import numpy as np
 
 
@@ -21,6 +22,7 @@ class Simulation:
         self.customer_arrival_rate = sys.argv[4]
         self.customer_service_rate = sys.argv[5]
         self.checkout_lanes = list()
+        self.event_queue = queue.Queue()
         # self.current_customer = Customer.Customer()
         # self.current_lane = CheckoutLane.CheckoutLane()
 
@@ -69,7 +71,7 @@ class Simulation:
             # Check if a customer is ready to be checked out
             for i in range(self.checkout_lanes):
                 if self.checkout_lanes[i].checkout_lanes[0].time_ <= sim_time:
-                    SimEvent.SimEvent(1, current_lane_nr, current_customer)
+                    SimEvent.SimEvent(1, i, current_customer)
                     Customer.Customer.log_out(self, sim_time)
             self.sim_duration_minutes -= 1
         pass

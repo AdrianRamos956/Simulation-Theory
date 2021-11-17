@@ -13,7 +13,6 @@ class SimEvent:
 
     def __init__(self, time, event_type, lane, customer):
         """
-
         :param time: The time the event occurs
         :param event_type: CUSTOMER_READY = 0 | CUSTOMER_COMPLETE = 1
         :param lane: The CheckoutLane object

@@ -33,7 +33,7 @@ class Simulation:
         """
         # TODO SETUP
         # Time used for checking when customers are added to system and when they need to be removed
-        stop = self.sim_duration_minutes
+        sim_end_time = self.sim_duration_minutes
         sim_time = 0.0
         self.create_lanes(self)
         seed = str(self.rand_seed)
@@ -41,9 +41,9 @@ class Simulation:
         # Length of seed for random number generation
         N = len(seed)
         # Random number used for uniform transformation
-        R = self.generateR(N)
+        R = self.generate_rand(N)
         # Service time of customer
-        time_service = self.uniTransform(R, self.customer_service_rate, N)
+        time_service = self.uni_transform(R, self.customer_service_rate, N)
         # Current customer to add to queue
         current_customer = Customer.Customer(0.0, time_service, customer_number)
         # Current lane for adding customers to
@@ -53,17 +53,17 @@ class Simulation:
         Customer.Customer.log_in(self)
         # Run simulation for specified duration
         while self.sim_duration_minutes != 0:
-            if sim_time >= stop:
+            if sim_time >= sim_end_time:
                 break
             # Add customers to lane in one-time step per the customer arrival rate
             # Create a customer and add them to a lane
             customer_number += 1
-            R = self.generateR(N)
+            R = self.generate_rand(N)
             # Perform uniform transformation for customer and add it to current sim_time to accurately detail when
             # it's added to the system
-            sim_time += self.uniTransform(R, self.customer_arrival_rate, N)
-            R = self.generateR(N)
-            time_service = self.uniTransform(R, self.customer_service_rate, N)
+            sim_time += self.uni_transform(R, self.customer_arrival_rate, N)
+            R = self.generate_rand(N)
+            time_service = self.uni_transform(R, self.customer_service_rate, N)
             current_customer = Customer.Customer(sim_time, time_service, customer_number)
             current_lane_nr = Customer.Customer.set_lane_nr()
             SimEvent.SimEvent(0, self.checkout_lanes[current_lane_nr], current_customer)
@@ -82,12 +82,12 @@ class Simulation:
             list.append(CheckoutLane.CheckoutLane(i))
 
     # Uniform transformation function for interarrival times
-    def uniTransform(R, lam, N):
-        customerDist = round((-np.log(1 - R) * lam), N)
-        # customerDist = round((-(1/lam)* np.log(1-R)), N)
-        return customerDist
+    def uni_transform(self, rand, lam, N):
+        customer_dist = round((-np.log(1 - rand) * lam), N)
+        # customer_dist = round((-(1/lam)* np.log(1-R)), N)
+        return customer_dist
 
     # Random number generator
-    def generateR(N):
-        R = round(random.uniform(0, 1), N)
+    def generate_rand(self, n):
+        R = round(random.uniform(0, 1), n)
         return R

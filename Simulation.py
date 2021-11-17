@@ -38,9 +38,9 @@ class Simulation:
         self.create_lanes(self)
         customer_number = 1
         # Random number used for uniform transformation
-        R = self.generate_rand(self.rand_seed)
+        rand = self.generate_rand(self.rand_seed)
         # Service time of customer
-        time_service = self.uni_transform(R, self.customer_service_rate)
+        time_service = inv_transform(rand, self.customer_service_rate)
         # Current customer to add to queue
         current_customer = Customer.Customer(0.0, time_service, customer_number)
         # Current lane for adding customers to
@@ -55,12 +55,12 @@ class Simulation:
             # Add customers to lane in one-time step per the customer arrival rate
             # Create a customer and add them to a lane
             customer_number += 1
-            R = self.generate_rand(self.rand_seed)
+            rand = self.generate_rand(self.rand_seed)
             # Perform uniform transformation for customer and add it to current sim_time to accurately detail when
             # it's added to the system
-            sim_time += self.uni_transform(R, self.customer_arrival_rate)
-            R = self.generate_rand(self.rand_seed)
-            time_service = self.uni_transform(R, self.customer_service_rate)
+            sim_time += inv_transform(rand, self.customer_arrival_rate)
+            rand = self.generate_rand(self.rand_seed)
+            time_service = inv_transform(rand, self.customer_service_rate)
             current_customer = Customer.Customer(sim_time, time_service, customer_number)
             current_lane_nr = Customer.Customer.set_lane_nr()
             SimEvent.SimEvent(0, self.checkout_lanes[current_lane_nr], current_customer)
@@ -78,14 +78,13 @@ class Simulation:
         for i in range(self.num_checkout_lanes):
             list.append(CheckoutLane.CheckoutLane(i))
 
-    # Uniform transformation function for interarrival times
-    def uni_transform(self, rand, lam):
-        customer_dist = round((-np.log(1 - rand) * lam))
-        # customer_dist = round((-(1/lam)* np.log(1-R)), N)
-        return customer_dist
 
-    # Random number generator
-    def generate_rand(seed):
-        random.seed(seed)
-        R = random.uniform(0,1)
-        return R
+# Uniform transformation function for interarrival times
+def inv_transform(rand, lam):
+    return round((-np.log(1 - rand) * lam))
+
+
+# Random number generator
+def generate_rand(seed):
+    random.seed(seed)
+    return random.uniform(0, 1)

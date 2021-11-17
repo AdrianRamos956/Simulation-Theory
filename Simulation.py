@@ -17,6 +17,7 @@ class Simulation:
         self.logfile = open('logfile.txt', 'a+')
         self.stats = Statistics.Statistics()
         self.rand_seed = sys.argv[1]
+        self.rand = 0
         self.sim_duration_minutes = sys.argv[2]
         self.num_checkout_lanes = sys.argv[3]
         self.customer_arrival_rate = sys.argv[4]
@@ -36,41 +37,27 @@ class Simulation:
         sim_end_time = self.sim_duration_minutes
         sim_time = 0.0
         self.create_lanes(self)
-        customer_number = 1
-        # Random number used for uniform transformation
-        rand = self.generate_rand(self.rand_seed)
+        random.seed(self.rand_seed)
         # Service time of customer
-        time_service = inv_transform(rand, self.customer_service_rate)
+        time_service = inv_transform(self.customer_service_rate)
         # Current customer to add to queue
-        current_customer = Customer.Customer(0.0, time_service, customer_number)
+        new_customer = Customer.Customer(0.0, time_service)
         # Current lane for adding customers to
-        current_lane_nr = self.checkout_lanes[0]
+        current_lane = self.checkout_lanes[0]
         # Add initial customer to Queue at time 0.0
-        SimEvent.SimEvent(0, current_lane_nr, current_customer)
-        Customer.Customer.log_in(self)
+        self.event_queue.put(SimEvent.SimEvent(0, SimEvent.CUSTOMER_READY, current_lane, new_customer))
+        self.event_queue.put(SimEvent.SimEvent(sim_time + time_service, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
         # Run simulation for specified duration
-        while self.sim_duration_minutes != 0:
-            if sim_time >= sim_end_time:
-                break
-            # Add customers to lane in one-time step per the customer arrival rate
-            # Create a customer and add them to a lane
-            customer_number += 1
-            rand = self.generate_rand(self.rand_seed)
-            # Perform uniform transformation for customer and add it to current sim_time to accurately detail when
-            # it's added to the system
-            sim_time += inv_transform(rand, self.customer_arrival_rate)
-            rand = self.generate_rand(self.rand_seed)
-            time_service = inv_transform(rand, self.customer_service_rate)
-            current_customer = Customer.Customer(sim_time, time_service, customer_number)
-            current_lane_nr = current_customer.set_lane_nr(self.checkout_lanes)
-            SimEvent.SimEvent(0, self.checkout_lanes[current_lane_nr], current_customer)
-            Customer.Customer.log_in(self)
-            # Check if a customer is ready to be checked out
-            for i in range(self.checkout_lanes):
-                if self.checkout_lanes[i].checkout_lanes[0].time_ <= sim_time:
-                    SimEvent.SimEvent(1, i, current_customer)
-                    Customer.Customer.log_out(self, sim_time)
-            self.sim_duration_minutes -= 1
+        while not self.event_queue.empty() and sim_time >= sim_end_time:
+            current_event = self.event_queue.get()
+            current_event.handle_event()
+            sim_time = current_event.time
+            customer_arrival = self.generate_rand(self.customer_arrival_rate)
+            time_service = generate_rand(self.customer_service_rate)
+            new_customer = Customer.Customer(customer_arrival + sim_time, time_service)
+            current_lane = self.checkout_lanes[new_customer.set_lane_nr(self.checkout_lanes)]
+            self.event_queue.put(SimEvent.SimEvent(sim_time, SimEvent.CUSTOMER_READY,customer_arrival, current_lane, new_customer))
+            self.event_queue.put(SimEvent.SimEvent(sim_time + time_service, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
         pass
 
     # Creates lanes based off of the amount of lanes given on the command line
@@ -85,6 +72,6 @@ def inv_transform(rand, lam):
 
 
 # Random number generator
-def generate_rand(seed):
-    random.seed(seed)
-    return random.uniform(0, 1)
+def generate_rand(rate):
+    return inv_transform(random.uniform(0, 1), rate)
+    

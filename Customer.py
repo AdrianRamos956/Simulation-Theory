@@ -7,7 +7,7 @@ import math
 
 class Customer:
 
-    def __init__(self, time_in, time_service, number):
+    def __init__(self, time_in, time_service):
         self.time_in = time_in
         # Int Variable
         self.time_out = None
@@ -17,9 +17,7 @@ class Customer:
         self.lane_nr = None
         # Float Variable
         self.time_service = time_service
-        # Int Variable
-        # for log file
-        self.number = number
+        
 
     # Sets customers current lane based off of which lane as the shortest queue
     def set_lane_nr(self, lane_list):

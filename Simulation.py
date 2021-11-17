@@ -36,12 +36,9 @@ class Simulation:
         sim_end_time = self.sim_duration_minutes
         sim_time = 0.0
         self.create_lanes(self)
-        seed = str(self.rand_seed)
         customer_number = 1
-        # Length of seed for random number generation
-        N = len(seed)
         # Random number used for uniform transformation
-        R = self.generate_rand(N)
+        R = self.generate_rand(self.rand_seed)
         # Service time of customer
         time_service = self.uni_transform(R, self.customer_service_rate, N)
         # Current customer to add to queue
@@ -58,11 +55,11 @@ class Simulation:
             # Add customers to lane in one-time step per the customer arrival rate
             # Create a customer and add them to a lane
             customer_number += 1
-            R = self.generate_rand(N)
+            R = self.generate_rand(self.rand_seed)
             # Perform uniform transformation for customer and add it to current sim_time to accurately detail when
             # it's added to the system
             sim_time += self.uni_transform(R, self.customer_arrival_rate, N)
-            R = self.generate_rand(N)
+            R = self.generate_rand(self.rand_seed)
             time_service = self.uni_transform(R, self.customer_service_rate, N)
             current_customer = Customer.Customer(sim_time, time_service, customer_number)
             current_lane_nr = Customer.Customer.set_lane_nr()
@@ -88,6 +85,7 @@ class Simulation:
         return customer_dist
 
     # Random number generator
-    def generate_rand(self, n):
-        R = round(random.uniform(0, 1), n)
+    def generate_rand(seed):
+        random.seed(seed)
+        R = random.uniform(0,1)
         return R

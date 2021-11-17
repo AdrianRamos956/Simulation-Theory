@@ -17,7 +17,6 @@ class Customer:
         self.lane_nr = None
         # Float Variable
         self.time_service = time_service
-        
 
     # Sets customers current lane based off of which lane as the shortest queue
     def set_lane_nr(self, lane_list):

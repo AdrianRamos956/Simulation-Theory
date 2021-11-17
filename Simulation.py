@@ -40,7 +40,7 @@ class Simulation:
         # Random number used for uniform transformation
         R = self.generate_rand(self.rand_seed)
         # Service time of customer
-        time_service = self.uni_transform(R, self.customer_service_rate, N)
+        time_service = self.uni_transform(R, self.customer_service_rate)
         # Current customer to add to queue
         current_customer = Customer.Customer(0.0, time_service, customer_number)
         # Current lane for adding customers to
@@ -58,9 +58,9 @@ class Simulation:
             R = self.generate_rand(self.rand_seed)
             # Perform uniform transformation for customer and add it to current sim_time to accurately detail when
             # it's added to the system
-            sim_time += self.uni_transform(R, self.customer_arrival_rate, N)
+            sim_time += self.uni_transform(R, self.customer_arrival_rate)
             R = self.generate_rand(self.rand_seed)
-            time_service = self.uni_transform(R, self.customer_service_rate, N)
+            time_service = self.uni_transform(R, self.customer_service_rate)
             current_customer = Customer.Customer(sim_time, time_service, customer_number)
             current_lane_nr = Customer.Customer.set_lane_nr()
             SimEvent.SimEvent(0, self.checkout_lanes[current_lane_nr], current_customer)
@@ -79,8 +79,8 @@ class Simulation:
             list.append(CheckoutLane.CheckoutLane(i))
 
     # Uniform transformation function for interarrival times
-    def uni_transform(self, rand, lam, N):
-        customer_dist = round((-np.log(1 - rand) * lam), N)
+    def uni_transform(self, rand, lam):
+        customer_dist = round((-np.log(1 - rand) * lam))
         # customer_dist = round((-(1/lam)* np.log(1-R)), N)
         return customer_dist
 

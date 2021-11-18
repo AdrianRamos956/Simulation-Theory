@@ -35,13 +35,14 @@ class Simulation:
         # TODO SETUP
         # Time used for checking when customers are added to system and when they need to be removed
         sim_end_time = self.sim_duration_minutes
+        customer_number = 0
         sim_time = 0.0
         self.create_lanes()
         random.seed(self.rand_seed)
         # Service time of customer
         customer_service_time = generate_rand(self.customer_service_rate)
         # Current customer to add to queue
-        new_customer = Customer.Customer(0.0, customer_service_time)
+        new_customer = Customer.Customer(0.0, customer_service_time, customer_number + 1 )
         # Current lane for adding customers to
         current_lane = self.checkout_lanes[0]
         # Add initial customer to Queue at time 0.0
@@ -58,7 +59,7 @@ class Simulation:
             if current_event.event_type == SimEvent.CUSTOMER_READY:
                 customer_arrival_time = generate_rand(self.customer_arrival_rate)
                 customer_service_time = generate_rand(self.customer_service_rate)
-                new_customer = Customer.Customer(customer_arrival_time + sim_time, customer_service_time)
+                new_customer = Customer.Customer(customer_arrival_time + sim_time, customer_service_time, customer_number + 1)
                 current_lane = self.checkout_lanes[new_customer.set_lane_nr(self.checkout_lanes)]
                 self.event_queue.put(
                     SimEvent.SimEvent(new_customer.time_in, SimEvent.CUSTOMER_READY, current_lane, new_customer))

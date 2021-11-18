@@ -20,7 +20,6 @@ def main():
     read_args()
     sim = Simulation.Simulation()
     sim.start()
-    
 
 
 def read_args():

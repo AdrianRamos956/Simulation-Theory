@@ -8,13 +8,13 @@ import math
 class Customer:
 
     def __init__(self, time_in, time_service):
-        self.time_in = time_in
+        self.time_in = int(time_in)
         # Int Variable
-        self.time_out = None
+        self.time_out = int()
         # Int Variable
-        self.time_waited = None
+        self.time_waited = int()
         # Int Variable
-        self.lane_nr = None
+        self.lane_nr = int()
         # Float Variable
         self.time_service = time_service
 
@@ -24,7 +24,7 @@ class Customer:
         shortest_lane_length = math.inf
         shortest_lane_nr = 0
         for i in range(number_of_lanes):
-            if len(lane_list[i]) < shortest_lane_length:
+            if lane_list[i].customer_queue.qsize() < shortest_lane_length:
                 shortest_lane_nr = i
         self.lane_nr = shortest_lane_nr
         return shortest_lane_nr
@@ -32,14 +32,14 @@ class Customer:
     # Writes out to the log file whenever a customer is added
     def log_in(self):
         file1 = open("log.txt", "a")
-        file1.write("Time: %2f Customer %d enters check-out lane %d" % (self.time_in, self.number, self.lane_nr))
+        file1.write("Time: %2f Customer enters check-out lane %d" % (self.time_in, self.lane_nr))
         file1.close()
 
     # Writes out to the log file whenever a customer has left a queue
     def log_out(self, time):
         self.time_out = time
         file1 = open("log.txt", "a")
-        file1.write("Time: %2f Customer %d exits check-out lane %d" % (self.time_out, self.number, self.lane_nr))
+        file1.write("Time: %2f Customer exits check-out lane %d" % (self.time_out, self.lane_nr))
         file1.close()
 
     # Calculates time waited for each customer

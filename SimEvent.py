@@ -34,5 +34,5 @@ class SimEvent:
             self.customer.log_in()
         elif self.event_type == CUSTOMER_COMPLETE:
             self.lane.customer_exit()
-            self.customer.log_out()
+            self.customer.log_out(self.time)
 

@@ -45,12 +45,17 @@ class Simulation:
         # Current customer to add to queue
         customer_number = customer_number + 1
         new_customer = Customer.Customer(0.0, customer_service_time, customer_number )
+        #self.stats.set_avg_customer_systime( sim_time, sim_end_time)
         # Current lane for adding customers to
         current_lane = self.checkout_lanes[0]
         # Add initial customer to Queue at time 0.0
         self.event_queue.put(SimEvent.SimEvent(0, SimEvent.CUSTOMER_READY, current_lane, new_customer))
         self.event_queue.put(
             SimEvent.SimEvent(sim_time + customer_service_time, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
+        self.stats.set_avg_customer_systime(sim_time, sim_time + customer_service_time)
+        
+        self.stats.set_avg_customer_wait(sim_time, customer_service_time - sim_time)
+        
         # Run simulation for specified duration
         while not self.event_queue.empty() and sim_time <= sim_end_time:
             current_event = self.event_queue.get()
@@ -65,19 +70,21 @@ class Simulation:
                 #print(customer_time_in)
                 customer_number = customer_number + 1
                 new_customer = Customer.Customer(customer_arrival_time + sim_time, customer_service_time, customer_number )
+                #self.stats.set_avg_customer_systime( sim_time, sim_end_time)
                 current_lane = self.checkout_lanes[new_customer.set_lane_nr(self.checkout_lanes)]
                 self.event_queue.put(
                     SimEvent.SimEvent(new_customer.time_in, SimEvent.CUSTOMER_READY, current_lane, new_customer))
                 self.event_queue.put(
                     SimEvent.SimEvent(new_customer.time_in + new_customer.time_service, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
+                self.stats.set_avg_customer_systime(sim_time, sim_time + customer_service_time)
+                
+                self.stats.set_avg_customer_wait(sim_time, sim_time + customer_service_time)
                     
-        while not self.event_queue.empty():
-            current_event = self.event_queue.get()
-            current_event.handle_event()
-            sim_time = current_event.time
-            customer_number = customer_number + 1
-            #print(customer_number)
+        for i in range(len(self.checkout_lanes)):
+          customer_number += self.checkout_lanes[i].customers_left_in_queue()
             
+        
+        self.stats.set_avg_customers(sim_time, customer_number) 
         self.stats.write_stats()
 
     # Creates lanes based off of the amount of lanes given on the command line

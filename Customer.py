@@ -28,8 +28,8 @@ class Customer:
         for i in range(number_of_lanes):
             if lane_list[i].customer_queue.qsize() < shortest_lane_length:
                 shortest_lane_nr = i
+                shortest_lane_length = lane_list[i].customer_queue.qsize()
         self.lane_nr = shortest_lane_nr
-        shortest_lane_length += 1
         return shortest_lane_nr
 
     # Writes out to the log file whenever a customer is added

@@ -24,17 +24,18 @@ class Customer:
         number_of_lanes = len(lane_list)
         shortest_lane_length = float('inf')
         shortest_lane_nr = 0
+        i = 0
         for i in range(number_of_lanes):
             if lane_list[i].customer_queue.qsize() < shortest_lane_length:
                 shortest_lane_nr = i
         self.lane_nr = shortest_lane_nr
+        shortest_lane_length += 1
         return shortest_lane_nr
 
     # Writes out to the log file whenever a customer is added
     def log_in(self):
         file1 = open("logfile.txt", "a")
-        file1.write("Time: %.2f Customer enters check-out lane %d\n" % (self.time_in, self.lane_nr))
-        print(self.time_in)
+        file1.write("-Time: %.2f Customer %d enters check-out lane %d\n" % (self.time_in, self.customer_id, self.lane_nr))
         file1.close()
 
     # Writes out to the log file whenever a customer has left a queue

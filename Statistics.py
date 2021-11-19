@@ -44,10 +44,10 @@ class Statistics:
     def write_stats(self):
        with open("statistics.txt", "a") as s:
          percentage = "{:.2%}".format(self.p_no_customers)
-         avg_time_per = self.avg_customer_systime / self.cus_coutner
+         #avg_time_per = self.avg_customer_systime / self.cus_coutner
          #s.write("The average number of customers in the system at any particular time is %2f\n" % (self.avg_customers))
          #s.write("The average time each customer spent in the system is %2f \n" % (avg_time_per))
          #s.write("The average time each customer waited in a particualer lane is \n" % (self.avg_customer_wait))
          #s.write("The average time each customer waited before being served is %2f \n" % (self.avg_customers_waiting))
-         #s.write("The probability that no customers were in the system at any particular moment is %s \n" % (percentage))
+         s.write("The probability that no customers were in the system at any particular moment is %s \n" % (percentage))
          

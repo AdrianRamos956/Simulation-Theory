@@ -77,6 +77,8 @@ class Simulation:
             sim_time = current_event.time
             customer_number = customer_number + 1
             #print(customer_number)
+            
+        self.stats.write_stats()
 
     # Creates lanes based off of the amount of lanes given on the command line
     def create_lanes(self):

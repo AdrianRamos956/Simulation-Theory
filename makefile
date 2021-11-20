@@ -1,2 +1,2 @@
 make:
-		rm -f *.txt
+		rm -rf *.txt

@@ -2,6 +2,7 @@
 Customer.py
 """
 import CheckoutLane as cl
+import random
 import math
 
 
@@ -23,7 +24,7 @@ class Customer:
     def set_lane_nr(self, lane_list):
         equal_lanes = []
         number_of_lanes = len(lane_list)
-        shortest_lane_length = int('inf')
+        shortest_lane_length = float('inf')
         shortest_lane_nr = 0
         i = 0
         for i in range(number_of_lanes):

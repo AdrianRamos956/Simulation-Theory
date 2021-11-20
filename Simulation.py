@@ -54,7 +54,7 @@ class Simulation:
             SimEvent.SimEvent(sim_time + customer_service_time, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
         self.stats.set_avg_customer_systime(sim_time, sim_time + customer_service_time)
         
-        self.stats.set_avg_customer_wait(sim_time, customer_service_time - sim_time)
+        self.stats.set_avg_customer_wait(sim_time + customer_service_time, 0)
         
         # Run simulation for specified duration
         while not self.event_queue.empty() and sim_time <= sim_end_time:
@@ -78,13 +78,14 @@ class Simulation:
                     SimEvent.SimEvent(new_customer.time_in + new_customer.time_service, SimEvent.CUSTOMER_COMPLETE, current_lane, new_customer))
                 self.stats.set_avg_customer_systime(sim_time, sim_time + customer_service_time)
                 
-                self.stats.set_avg_customer_wait(sim_time, sim_time + customer_service_time)
+                self.stats.set_avg_customer_wait(sim_time + customer_service_time, customer_time_in)
                     
         for i in range(len(self.checkout_lanes)):
           customer_number += self.checkout_lanes[i].customers_left_in_queue()
             
         
         self.stats.set_avg_customers(sim_time, customer_number) 
+        self.stats.set_avg_customers_waiting(self.num_checkout_lanes)
         self.stats.write_stats()
 
     # Creates lanes based off of the amount of lanes given on the command line

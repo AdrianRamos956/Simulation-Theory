@@ -35,4 +35,7 @@ class CheckoutLane:
             if len(i) >= 1:
                 ct += len(i) - 1
         return ct
+        
+    def customers_left_in_queue(self):
+      return self.customer_queue.qsize()
 

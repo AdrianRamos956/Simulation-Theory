@@ -1,1 +1,5 @@
+The average number of customers in the system at any particular time is 20.66 
+The average time each customer spent in the system is 0.19 
+The average time each customer waited before being served is 0.15 
+The average number of customers waiting to be served in all check-out lanes at any particular time 0.73 
 The probability that no customers were in the system at any particular moment is 75.00% 
